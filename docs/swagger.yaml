@@ -1,0 +1,26 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+  description: Ini adalah contoh dokumentasi Swagger dengan Gin
+  title: Contoh API dengan Swagger
+  version: "1.0"
+paths:
+  /hello:
+    get:
+      consumes:
+      - application/json
+      description: Mengembalikan respon "pong"
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get Pong
+      tags:
+      - Example
+swagger: "2.0"
