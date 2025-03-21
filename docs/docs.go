@@ -15,9 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/hello": {
+        "/surah": {
             "get": {
-                "description": "Mengembalikan respon \"pong\"",
+                "description": "Retrieve a list of surah from the Quran with optional search and pagination",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,19 +25,107 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Example"
+                    "Surah"
                 ],
-                "summary": "Get Pong",
+                "summary": "Get list of surah",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search by surah name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit number of results",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset for pagination",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/model.ResponseWithMeta-model_Surah"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.Response-any"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.PaginatedResponse-model_Surah": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Surah"
+                    }
+                }
+            }
+        },
+        "model.Response-any": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ResponseWithMeta-model_Surah": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/model.PaginatedResponse-model_Surah"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Surah": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "number_of_ayah": {
+                    "type": "integer"
+                },
+                "number_of_surah": {
+                    "type": "integer"
+                },
+                "place": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
                 }
             }
         }
@@ -48,10 +136,10 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/",
+	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "Contoh API dengan Swagger",
-	Description:      "Ini adalah contoh dokumentasi Swagger dengan Gin",
+	Title:            "MuslimEase - Developer API",
+	Description:      "A modern and open Islamic API providing Qur'an data, prayer schedules, daily duas, and more — built for developers to create powerful and meaningful Islamic applications.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

@@ -1,26 +1,86 @@
-basePath: /
+basePath: /api/v1
+definitions:
+  model.PaginatedResponse-model_Surah:
+    properties:
+      count:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.Surah'
+        type: array
+    type: object
+  model.Response-any:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  model.ResponseWithMeta-model_Surah:
+    properties:
+      data:
+        $ref: '#/definitions/model.PaginatedResponse-model_Surah'
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  model.Surah:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      number_of_ayah:
+        type: integer
+      number_of_surah:
+        type: integer
+      place:
+        type: string
+      type:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
-  description: Ini adalah contoh dokumentasi Swagger dengan Gin
-  title: Contoh API dengan Swagger
+  description: A modern and open Islamic API providing Qur'an data, prayer schedules,
+    daily duas, and more — built for developers to create powerful and meaningful
+    Islamic applications.
+  title: MuslimEase - Developer API
   version: "1.0"
 paths:
-  /hello:
+  /surah:
     get:
       consumes:
       - application/json
-      description: Mengembalikan respon "pong"
+      description: Retrieve a list of surah from the Quran with optional search and
+        pagination
+      parameters:
+      - description: Search by surah name
+        in: query
+        name: search
+        type: string
+      - description: Limit number of results
+        in: query
+        name: limit
+        type: integer
+      - description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Get Pong
+            $ref: '#/definitions/model.ResponseWithMeta-model_Surah'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Response-any'
+      summary: Get list of surah
       tags:
-      - Example
+      - Surah
 swagger: "2.0"
